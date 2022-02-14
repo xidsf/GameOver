@@ -354,7 +354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84f1ddf2f65970149bb2937fb2821793, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bossInfo: {fileID: 0}
+  autoDestroyTime: 10
 --- !u!1 &3213225140037057534
 GameObject:
   m_ObjectHideFlags: 0

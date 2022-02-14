@@ -8,15 +8,20 @@ public class Squid : MonoBehaviour
 
     private bool isPowered = false;
     private int Power = 1;
+    private bool eatable;
 
     //필요한 컴포넌트
     Boss bossInfo;
-
+    PlayerController thePlayer;
+    [SerializeField]
+    private float autoDestroyTime;
 
     private void Start()
     {
         squidRigid = GetComponent<Rigidbody>();
         bossInfo = GameObject.FindObjectOfType<Boss>();
+        thePlayer = GameObject.FindObjectOfType<PlayerController>();
+        Destroy(gameObject, autoDestroyTime);
 
     }
 
@@ -40,6 +45,16 @@ public class Squid : MonoBehaviour
                 bossInfo.DamageBoss(Power);
             }
         }
+        else if(!collision.gameObject.CompareTag("Player"))
+        {
+            eatable = true;
+        }
+        if( eatable && collision.gameObject.CompareTag("Player"))
+        {
+            thePlayer.AquireSquid();
+            Destroy(gameObject);
+        }
+
     }
 
     

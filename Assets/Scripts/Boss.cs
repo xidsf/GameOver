@@ -68,7 +68,6 @@ public class Boss : MonoBehaviour
 
     private void Attack()
     {
-        Debug.Log("attack");
         Physics.Raycast(new Vector3(Player.transform.position.x, 50, Player.transform.position.z), Vector3.down, out hit, 200f, layerMask);//하드코딩
         Instantiate(DangerZone, hit.point + Vector3.up * 0.1f, Quaternion.identity);
     }

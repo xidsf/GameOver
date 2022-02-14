@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -30,19 +31,24 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private int maxSquid;
     private int currentSquid;
+    [SerializeField]
+    TextMeshProUGUI SQUIDCountText;
 
     //상태 변수
     private bool isGround = true;
-    private bool isNormal = true;
     private bool isShooting;
     private bool isRun;
-    private bool isLongJump;
 
 
     [Header("Camera")]
     //카메라 민감도
     [SerializeField]
     private float lookSensitivity;
+    [SerializeField]
+    private Vector3 KnockDownPosition;
+    [SerializeField]
+    private Vector3 originPosition;
+
 
     //카메라 회전 한계
     [SerializeField]
@@ -73,22 +79,10 @@ public class PlayerController : MonoBehaviour
         myRigid = GetComponent<Rigidbody>();
         capsuleCollider = GetComponent<CapsuleCollider>();
 
+        
         applySpeed = walkSpeed;
+        currentSquid = maxSquid;
     }
-
-    /*private void FixedUpdate()
-    {
-        Gravity();
-    }
-
-    private void Gravity()
-    {
-        if(!isGround)
-        {
-            myRigid.velocity -= new Vector3(0, gravity, 0);
-        }
-    }*/
-
 
     void Update()
     {
@@ -101,8 +95,11 @@ public class PlayerController : MonoBehaviour
         TryMove();
         TryJump();
         TryShoot();
+        DeadCheck();
+        KnockDown();
+        KnockDownCancel();
+        ShowSquidCount();
     }
-
 
 
     private void ShowVelocity()
@@ -112,7 +109,7 @@ public class PlayerController : MonoBehaviour
 
     private void CheckGround()
     {
-        isGround = Physics.Raycast(transform.position, Vector3.down, capsuleCollider.bounds.extents.y + 0.2f);
+        isGround = Physics.Raycast(transform.position, Vector3.down, capsuleCollider.bounds.extents.y + 0.5f);
     }
 
     private void TryRun()
@@ -129,13 +126,16 @@ public class PlayerController : MonoBehaviour
 
     private void TryMove()
     {
-        if(isGround)
+        if(!thePlayerStatus.isNnockDown)
         {
-            Move();
-        }
-        else
-        {
-            AirMove();
+            if (isGround)
+            {
+                Move();
+            }
+            else
+            {
+                AirMove();
+            }
         }
     }
 
@@ -149,7 +149,6 @@ public class PlayerController : MonoBehaviour
         Vector3 velocity = (_moveHorizontal + _moveVertical).normalized * applySpeed;
         velocity.y = myRigid.velocity.y;
         myRigid.velocity = velocity;
-
     }
 
     private void Run()
@@ -170,12 +169,22 @@ public class PlayerController : MonoBehaviour
 
         Vector3 _moveHorizontal = transform.right * _moveDirX;
         Vector3 _moveVertical = transform.forward * _moveDirZ;
-        Vector3 velocity = (_moveHorizontal + _moveVertical).normalized * airSpeed;
+        Vector3 velocity;
 
-        if(isNormal && (velocity + new Vector3(myRigid.velocity.x, 0, myRigid.velocity.z)).magnitude > runSpeed)
+        if ((_moveVertical + new Vector3(myRigid.velocity.x, 0, myRigid.velocity.z)).magnitude >= runSpeed)
+        {
+            velocity = _moveHorizontal.normalized * airSpeed;
+        }
+        else
+        {
+            velocity = (_moveHorizontal + _moveVertical).normalized * airSpeed;
+        }
+
+
+        /*if (((velocity + new Vector3(myRigid.velocity.x, 0, myRigid.velocity.z)).magnitude) > runSpeed)
         {
             return;
-        }
+        }*/
         myRigid.velocity += velocity * Time.deltaTime;
     }
 
@@ -183,27 +192,33 @@ public class PlayerController : MonoBehaviour
     {
         //상하 카메라 회전
 
-        float _xRotation = Input.GetAxisRaw("Mouse Y");
+        if(!thePlayerStatus.isNnockDown)
+        {
+            float _xRotation = Input.GetAxisRaw("Mouse Y");
 
-        float _cameraRotationX = _xRotation * lookSensitivity;
-        currentCameraRotationX -= _cameraRotationX;
-        currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
+            float _cameraRotationX = _xRotation * lookSensitivity;
+            currentCameraRotationX -= _cameraRotationX;
+            currentCameraRotationX = Mathf.Clamp(currentCameraRotationX, -cameraRotationLimit, cameraRotationLimit);
 
-        theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0, 0);
+            theCamera.transform.localEulerAngles = new Vector3(currentCameraRotationX, 0, 0);
+        }
     }
 
     private void CharacterRotation()
     {
         //좌우 케릭터 회전
 
-        float _yRotation = Input.GetAxisRaw("Mouse X");
-        Vector3 _characterRotationY = new Vector3(0, _yRotation, 0) * lookSensitivity;
-        myRigid.MoveRotation(myRigid.rotation * Quaternion.Euler(_characterRotationY));
+        if(!thePlayerStatus.isNnockDown)
+        {
+            float _yRotation = Input.GetAxisRaw("Mouse X");
+            Vector3 _characterRotationY = new Vector3(0, _yRotation, 0) * lookSensitivity;
+            myRigid.MoveRotation(myRigid.rotation * Quaternion.Euler(_characterRotationY));
+        }
     }
 
     private void TryJump()
     {
-        if(Input.GetKeyDown(KeyCode.Space) && isGround)
+        if(Input.GetKeyDown(KeyCode.Space) && isGround && !thePlayerStatus.isNnockDown)
         {
             Jump();
         }
@@ -224,8 +239,9 @@ public class PlayerController : MonoBehaviour
 
     private void TryShoot()
     {
-        if (Input.GetButton("Fire1") && currentShootDelay <= 0 && !isShooting)
+        if (currentSquid > 0 &&Input.GetButton("Fire1") && currentShootDelay <= 0 && !isShooting)
         {
+            currentSquid -= 1;
             StartCoroutine("Shoot");
         }
     }
@@ -240,4 +256,41 @@ public class PlayerController : MonoBehaviour
         isShooting = false;
         yield break;
     }
+
+    private void KnockDown()
+    {
+        if(thePlayerStatus.isNnockDown)
+        {
+            Debug.Log("CameraMoveKnockDownPosition");
+            theCamera.transform.localPosition = Vector3.Lerp(theCamera.transform.localPosition, KnockDownPosition, 0.4f);
+        }
+        
+    }
+
+    private void KnockDownCancel()
+    {
+        if (!thePlayerStatus.isNnockDown)
+        {
+            theCamera.transform.localPosition =  Vector3.Lerp(theCamera.transform.localPosition, originPosition, 0.5f);
+        }
+    }
+
+    private void ShowSquidCount()
+    {
+        SQUIDCountText.text = "SQUID  " + currentSquid.ToString() + "/" + maxSquid.ToString();
+    }
+
+    private void DeadCheck()
+    {
+        if(thePlayerStatus.PlayerHP <= 0)
+        {
+            Debug.Log("Dead!");
+        }
+    }
+
+    public void AquireSquid()
+    {
+        currentSquid++;
+    }
+
 }

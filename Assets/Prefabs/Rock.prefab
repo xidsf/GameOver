@@ -94,7 +94,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8533c4fc03c0a4c802126b13c6a833, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
+  KnockDownTime: 1
+  DestryoTime: 30
 --- !u!54 &-1792328558959963657
 Rigidbody:
   m_ObjectHideFlags: 0
