@@ -10,8 +10,7 @@ public class DangerZone : MonoBehaviour
     [SerializeField]
     private float height = 30f;
     private Vector3 SpawnRockPosition;
-    [SerializeField]
-    private float SpawnDelay;
+    public float SpawnDelay = 1f;
 
     private void Start()
     {
@@ -21,7 +20,7 @@ public class DangerZone : MonoBehaviour
 
     IEnumerator ShowDangerZone()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(SpawnDelay);
         Instantiate(Rock, SpawnRockPosition, Quaternion.identity);
         Destroy(gameObject);
     }

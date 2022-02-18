@@ -291,7 +291,7 @@ GameObject:
   - component: {fileID: 6153694814344843457}
   m_Layer: 10
   m_Name: Squid
-  m_TagString: Untagged
+  m_TagString: Squid
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -354,7 +354,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84f1ddf2f65970149bb2937fb2821793, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SquidThrowPower: 30
   autoDestroyTime: 10
+  eatableTime: 0.5
 --- !u!1 &3213225140037057534
 GameObject:
   m_ObjectHideFlags: 0

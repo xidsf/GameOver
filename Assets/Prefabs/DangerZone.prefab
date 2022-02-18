@@ -93,3 +93,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Rock: {fileID: 4691387092258483878, guid: 0cc0b4f808b99ea40a51b99340acb4a1, type: 3}
+  height: 30
+  SpawnDelay: 1

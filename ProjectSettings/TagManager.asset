@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - BossHitPoint
+  - Boss
+  - Ground
+  - Squid
+  - Dead
   layers:
   - Default
   - TransparentFX
@@ -22,7 +26,7 @@ TagManager:
   - Wall
   - BossHitPoint
   - Ground
-  - 
+  - Trap
   - 
   - 
   - 

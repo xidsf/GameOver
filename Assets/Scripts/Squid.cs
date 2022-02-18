@@ -7,14 +7,21 @@ public class Squid : MonoBehaviour
     Rigidbody squidRigid;
 
     private bool isPowered = false;
-    private int Power = 1;
-    private bool eatable;
+    private int damage = 1;
+    private bool eatable = false;
+
+    [SerializeField]
+    private float SquidThrowPower;
+
+    [SerializeField]
+    private float autoDestroyTime;
+    [SerializeField]
+    private float eatableTime;
+    private float currentEatableTime;
 
     //필요한 컴포넌트
     Boss bossInfo;
     PlayerController thePlayer;
-    [SerializeField]
-    private float autoDestroyTime;
 
     private void Start()
     {
@@ -22,35 +29,54 @@ public class Squid : MonoBehaviour
         bossInfo = GameObject.FindObjectOfType<Boss>();
         thePlayer = GameObject.FindObjectOfType<PlayerController>();
         Destroy(gameObject, autoDestroyTime);
-
+        currentEatableTime = eatableTime;
     }
 
     private void Update()
     {
-        if(!isPowered)
+        ThrowSquid();
+        CalcEatable();
+        ChangeEatable();
+    }
+
+    private void CalcEatable()
+    {
+        if (currentEatableTime >= 0)
         {
-            squidRigid.AddRelativeForce(Vector3.forward * 30f, ForceMode.Impulse);
+            currentEatableTime -= Time.deltaTime;
+        }
+    }
+
+    private void ChangeEatable()
+    {
+        if(currentEatableTime <= 0)
+        {
+            eatable = true;
+        }
+    }
+
+    private void ThrowSquid()
+    {
+        if (!isPowered)
+        {
+            squidRigid.AddRelativeForce(Vector3.forward * SquidThrowPower, ForceMode.Impulse);
             isPowered = true;
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("BossHitPoint"))
+        if (collision.collider.CompareTag("BossHitPoint"))
         {
-            Debug.Log("tagCheck");
+            Debug.Log("hit");
             if (bossInfo.isGroggy)
             {
-                Debug.Log("Hit");
-                bossInfo.DamageBoss(Power);
+                bossInfo.DamageBoss(damage);
             }
         }
-        else if(!collision.gameObject.CompareTag("Player"))
+        else if(eatable && collision.gameObject.CompareTag("Player"))
         {
-            eatable = true;
-        }
-        if( eatable && collision.gameObject.CompareTag("Player"))
-        {
+            eatable = false;
             thePlayer.AquireSquid();
             Destroy(gameObject);
         }

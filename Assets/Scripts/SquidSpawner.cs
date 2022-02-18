@@ -6,21 +6,40 @@ public class SquidSpawner : MonoBehaviour
 {
     [SerializeField]
     private float SquidSpawnTime;
+    private float currentSquidSpawnTime;
     [SerializeField]
     GameObject SquidPrefab;
 
 
     private void Start()
     {
-        StartCoroutine("SpawnSquidCoroutine");
+        currentSquidSpawnTime = SquidSpawnTime;
     }
 
-    IEnumerator SpawnSquidCoroutine()
+    private void Update()
     {
-        yield return new WaitForSeconds(SquidSpawnTime);
-        Instantiate(SquidPrefab, transform.position, Quaternion.identity);
-        yield return null;
-
+        CalcSpawnTime();
+        SpawnSquid();
     }
+
+    private void CalcSpawnTime()
+    {
+        if(currentSquidSpawnTime > 0)
+        {
+            currentSquidSpawnTime -= Time.deltaTime;
+        }
+    }
+
+    private void SpawnSquid()
+    {
+        if(currentSquidSpawnTime <= 0)
+        {
+            GameObject clone = Instantiate(SquidPrefab, transform.position, Quaternion.identity);
+            clone.GetComponent<Rigidbody>().AddRelativeForce(Vector3.back * 30f, ForceMode.Impulse);
+            currentSquidSpawnTime = SquidSpawnTime;
+
+        }
+    }
+
 
 }

@@ -94,8 +94,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8533c4fc03c0a4c802126b13c6a833, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerController: {fileID: 8650854297825110944, guid: 931cf3b926ace9949ad0196e7ae104c6,
+    type: 3}
   KnockDownTime: 1
-  DestryoTime: 30
+  DestryoTime: 5
 --- !u!54 &-1792328558959963657
 Rigidbody:
   m_ObjectHideFlags: 0
