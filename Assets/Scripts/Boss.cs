@@ -1,22 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Boss : MonoBehaviour
 {
     [Header("Boss Status")]
     [SerializeField]
     private int BossMaxHP;
-    [SerializeField]
-    private int currentBossHP; //ser삭제
+    private int currentBossHP; 
     [SerializeField]
     private int BossATK;
 
-    [Header("Test")]
+    [HideInInspector]
     public bool isGroggy; //hide
-    public bool isIdle; //private
-    public bool isRising;
-    public bool isFalling;
+
+    private bool isIdle; //private
+    private bool isRising;
+    private bool isFalling;
+    private bool isExploding;
 
     [Header("Boss Move")]
     [SerializeField]
@@ -30,6 +32,8 @@ public class Boss : MonoBehaviour
     private float currentGroggyTime;
     [SerializeField]
     private float BossRotateSpeed;
+    [SerializeField]
+    private float bossExplodeCount;
 
     [Header("difficulty")]
     [SerializeField]
@@ -38,7 +42,6 @@ public class Boss : MonoBehaviour
     [SerializeField]
     private int[] AttackCount = new int[3];
     private int currentAttackCount;
-    [SerializeField]
     private int currentDifficulty = 1;
 
     [Header("Components")]
@@ -52,6 +55,10 @@ public class Boss : MonoBehaviour
     GameObject DangerZone;
     [SerializeField]
     GameObject HitPoint;
+    [SerializeField]
+    GameObject explodeEffect;
+    [SerializeField]
+    Vector3[] explodePosition = new Vector3[7];
     Rigidbody rigid;
 
     RaycastHit hit;
@@ -61,21 +68,25 @@ public class Boss : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
 
         currentAttackDelay = AttackDelay[currentDifficulty];
-        currentBossHP = BossMaxHP;
+        currentBossHP = 1;
         isRising = true;
     }
 
     void Update()
     {
-        Rise();
-        Fall();
-        Shield();
-        CalcGroggyTime();
-        CalcAttackDelay();
-        TryAttack();
-        BossRotate();
-        AttackCountCheck();
-        ChangeDifficulty();
+        if(currentBossHP > 0)
+        {
+            Rise();
+            Fall();
+            Shield();
+            CalcGroggyTime();
+            CalcAttackDelay();
+            TryAttack();
+            BossRotate();
+            AttackCountCheck();
+            ChangeDifficulty();
+        }
+        BossDeadCheck();
     }
 
     private void Rise()
@@ -206,11 +217,38 @@ public class Boss : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (isFalling)
+        if(!collision.gameObject.CompareTag("Squid"))
         {
-            isFalling = false;
-            isGroggy = true;
+            if (isFalling)
+            {
+                isFalling = false;
+                isGroggy = true;
+            }
         }
     }
 
+    private void BossDeadCheck()
+    {
+        if(currentBossHP <= 0 && bossExplodeCount > 0)
+        {
+            StartCoroutine("DeadEffectCoroutine");
+        }
+        else if(currentBossHP <= 0 && bossExplodeCount == 0)
+        {
+            GameManager.instance.currentStage = 0;
+            SceneManager.LoadScene("ClearScene");
+        }
+    }
+
+    IEnumerator DeadEffectCoroutine()
+    {
+        if(!isExploding && bossExplodeCount > 0)
+        {
+            isExploding = true;
+            Instantiate(explodeEffect, explodePosition[Random.Range(0, 7)], Quaternion.identity);
+            bossExplodeCount--;
+            yield return new WaitForSeconds(0.5f);
+            isExploding = false;
+        }
+    }
 }

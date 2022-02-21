@@ -68,7 +68,6 @@ public class Squid : MonoBehaviour
     {
         if (collision.collider.CompareTag("BossHitPoint"))
         {
-            Debug.Log("hit");
             if (bossInfo.isGroggy)
             {
                 bossInfo.DamageBoss(damage);

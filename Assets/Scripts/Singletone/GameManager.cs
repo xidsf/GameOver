@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public int[] DeathCount = new int[4];
 
-    [HideInInspector]
+    //[HideInInspector]
     public int currentStage;
 
     

@@ -7,14 +7,14 @@ public class PlayerDamaged : MonoBehaviour
 {
     RawImage image;
     [SerializeField]
-    PlayerStatus platerStatus;
+    PlayerStatus playerStatus;
     private int PlayerHP;
 
 
-    private void Awake()
+    private void Start()
     {
         image = gameObject.GetComponent<RawImage>();
-        PlayerHP = platerStatus.PlayerHP;
+        PlayerHP = playerStatus.PlayerHP;
     }
 
     private void Update()
@@ -37,12 +37,12 @@ public class PlayerDamaged : MonoBehaviour
 
     private void FadeIn()
     {
-        if(PlayerHP > platerStatus.PlayerHP)
+        if (PlayerHP > playerStatus.PlayerHP)
         {
             Color currColor = image.color;
             currColor.a = 1;
             image.color = currColor;
-            PlayerHP = platerStatus.PlayerHP;
+            PlayerHP = playerStatus.PlayerHP;
         }
         
     }

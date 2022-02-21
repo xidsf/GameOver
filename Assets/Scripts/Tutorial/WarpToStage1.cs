@@ -9,6 +9,7 @@ public class WarpToStage1 : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Player"))
         {
+            GameManager.instance.currentStage = 1;
             SceneManager.LoadScene("Stage1");
         }
     }

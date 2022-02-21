@@ -15,4 +15,5 @@ public class PlayerStatus : MonoBehaviour
     {
         PlayerHP = 3;
     }
+
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BossBullet : MonoBehaviour
 {
-    [SerializeField]
     PlayerController playerController;
     PlayerStatus playerStatus;
     Rigidbody rockRigid;
@@ -12,16 +11,17 @@ public class BossBullet : MonoBehaviour
     [SerializeField]
     private float KnockDownTime;
     [SerializeField]
-    private float DestryoTime;
+    private float DestroyTime;
 
     private bool isFalling = true;
 
     private void Start()
     {
+        playerController = FindObjectOfType<PlayerController>();
         playerStatus = FindObjectOfType<PlayerStatus>();
         rockRigid = GetComponent<Rigidbody>();
 
-        Destroy(gameObject, DestryoTime);
+        Destroy(gameObject, DestroyTime);
     }
 
     private void Update()
@@ -54,10 +54,13 @@ public class BossBullet : MonoBehaviour
 
     IEnumerator PlayerKnockDownCoroutine()
     {
-        playerStatus.isNnockDown = true;
-        yield return new WaitForSeconds(KnockDownTime);
-        playerStatus.isNnockDown = false;
-        yield return null;
+        if(playerStatus.PlayerHP > 0)
+        {
+            playerStatus.isNnockDown = true;
+            yield return new WaitForSeconds(KnockDownTime);
+            playerStatus.isNnockDown = false;
+            yield return null;
+        }
     }
 
 }

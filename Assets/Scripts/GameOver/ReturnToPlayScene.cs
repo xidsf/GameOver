@@ -6,8 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class ReturnToPlayScene : MonoBehaviour
 {
-    [SerializeField]
     GameManager gameManager;
+
+    private void Start()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+    }
 
     public void ReturnScene()
     {

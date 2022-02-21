@@ -83,6 +83,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        Cursor.visible = false;
         Application.targetFrameRate = 60;
     }
 
@@ -90,8 +91,6 @@ public class PlayerController : MonoBehaviour
     {
         myRigid = GetComponent<Rigidbody>();
         capsuleCollider = GetComponent<CapsuleCollider>();
-
-        
         applySpeed = walkSpeed;
         maxSquid = GameManager.instance.SquidCount[GameManager.instance.currentStage];
         currentSquid = maxSquid;
