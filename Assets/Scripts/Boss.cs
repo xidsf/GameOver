@@ -68,7 +68,7 @@ public class Boss : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
 
         currentAttackDelay = AttackDelay[currentDifficulty];
-        currentBossHP = 1;
+        currentBossHP = BossMaxHP;
         isRising = true;
     }
 

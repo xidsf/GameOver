@@ -45,7 +45,6 @@ public class PlayerController : MonoBehaviour
     public bool isDead;
     public bool isInvincible;
 
-
     [Header("Camera")]
     //카메라 민감도
     [SerializeField]
@@ -170,6 +169,7 @@ public class PlayerController : MonoBehaviour
         Vector3 _moveVertical = transform.forward * _moveDirZ;
         Vector3 velocity = (_moveHorizontal + _moveVertical).normalized * applySpeed;
         velocity.y = myRigid.velocity.y;
+
         myRigid.velocity = velocity;
     }//움직임
 
@@ -340,6 +340,7 @@ public class PlayerController : MonoBehaviour
 
     private void DeadEvent()
     {
+        Cursor.visible = true;
         SceneManager.LoadScene("GameOver");
     }
 
