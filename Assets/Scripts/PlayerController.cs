@@ -39,10 +39,9 @@ public class PlayerController : MonoBehaviour
     TextMeshProUGUI SQUIDCountText;
 
     //상태 변수
-    [Header("Test")]
     public bool isGround = true;
-    public bool isShooting;
-    public bool isDead;
+    private bool isShooting;
+    private bool isDead;
     public bool isInvincible;
 
     [Header("Camera")]
@@ -77,7 +76,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     PlayerDamaged DamagedUI;
     private Rigidbody myRigid;
-    private CapsuleCollider capsuleCollider;
 
 
     private void Awake()
@@ -89,7 +87,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         myRigid = GetComponent<Rigidbody>();
-        capsuleCollider = GetComponent<CapsuleCollider>();
         applySpeed = walkSpeed;
         maxSquid = GameManager.instance.SquidCount[GameManager.instance.currentStage];
         currentSquid = maxSquid;
@@ -116,10 +113,10 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    /*private void ShowVelocity()
+    private void ShowVelocity()
     {
         Debug.Log(new Vector3(myRigid.velocity.x, 0, myRigid.velocity.z).magnitude);
-    }*/
+    }
 
     private void CheckGround()
     {
@@ -139,7 +136,7 @@ public class PlayerController : MonoBehaviour
         {
             Run();
         }
-        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        else
         {
             RunCancel();
         }
@@ -170,7 +167,9 @@ public class PlayerController : MonoBehaviour
         Vector3 velocity = (_moveHorizontal + _moveVertical).normalized * applySpeed;
         velocity.y = myRigid.velocity.y;
 
-        myRigid.velocity = velocity;
+        myRigid.velocity = Vector3.Lerp(myRigid.velocity, velocity, 0.1f);
+
+        //myRigid.velocity = velocity;
     }//움직임
 
     private void AirMove()//공중에서의 속력(일반 속력보다는 느림)
@@ -243,7 +242,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        myRigid.velocity = jumpForce * transform.up;
+        myRigid.velocity = new Vector3(myRigid.velocity.x, jumpForce, myRigid.velocity.z);
     }//점프
 
     private void CalcShootDelay()

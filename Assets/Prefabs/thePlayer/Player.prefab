@@ -847,7 +847,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f3358b9cdcb5ec49bf4a7f7fc056a97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkSpeed: 5
+  walkSpeed: 6
   runSpeed: 10
   airSpeed: 4
   invincibleTime: 1
@@ -858,10 +858,7 @@ MonoBehaviour:
   maxSquid: 5
   SQUIDCountText: {fileID: 2777213537433260371}
   isGround: 1
-  isShooting: 0
-  isDead: 0
-  isInvincible: 0
-  lookSensitivity: 2
+  lookSensitivity: 3
   KnockDownPosition: {x: 0, y: -0.4, z: 0}
   originPosition: {x: 0, y: 0.5, z: 0}
   cameraRotationLimit: 60

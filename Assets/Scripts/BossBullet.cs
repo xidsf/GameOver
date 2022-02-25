@@ -54,7 +54,7 @@ public class BossBullet : MonoBehaviour
 
     IEnumerator PlayerKnockDownCoroutine()
     {
-        if(playerStatus.PlayerHP > 0)
+        if(playerStatus.PlayerHP > 0 && playerController.isInvincible)
         {
             playerStatus.isNnockDown = true;
             yield return new WaitForSeconds(KnockDownTime);

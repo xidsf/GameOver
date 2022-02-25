@@ -19,6 +19,10 @@ public class ReturnToPlayScene : MonoBehaviour
         {
             SceneManager.LoadScene("Stage1");
         }
+        else if(gameManager.currentStage == 2)
+        {
+            SceneManager.LoadScene("Stage2");
+        }
         else if(gameManager.currentStage == 3)
         {
             SceneManager.LoadScene("BossStage");
