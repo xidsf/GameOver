@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
     private bool isShooting;
     private bool isDead;
     public bool isInvincible;
+    private bool isSetting;
 
     [Header("Camera")]
     //카메라 민감도
@@ -75,6 +76,8 @@ public class PlayerController : MonoBehaviour
     GameObject BottomCollider;
     [SerializeField]
     PlayerDamaged DamagedUI;
+    [SerializeField]
+    GameObject SettingUI;
     private Rigidbody myRigid;
 
 
@@ -95,16 +98,20 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        CameraRotation();
-        CharacterRotation();
+        CheckQuitMenu();
+        if (!isSetting)
+        {
+            CameraRotation();
+            CharacterRotation();
+            TryRun();
+            TryMove();
+            TryJump();
+            TryShoot();
+        }
         CheckGround();
         CalcShootDelay();
         //ShowVelocity();
-        TryRun();
-        TryMove();
-        TryJump();
         //ObstacleCheck();
-        TryShoot();
         CalcInvisibleTime();
         DeadCheck();
         KnockDown();
@@ -386,7 +393,15 @@ public class PlayerController : MonoBehaviour
     {
         if(Input.GetKey(KeyCode.Escape))
         {
-            
+            Cursor.visible = true;
+            isSetting = true;
+            SettingUI.SetActive(true);
+        }
+        else if(isSetting && Input.GetKey(KeyCode.Escape))
+        {
+            isSetting = false;
+            SettingUI.SetActive(false);
+            Cursor.visible = false;
         }
     }
 

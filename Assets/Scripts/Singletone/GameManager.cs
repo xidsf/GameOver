@@ -34,8 +34,8 @@ public class GameManager : MonoBehaviour
         #endregion 
 
         SquidCount[0] = -1;
-        SquidCount[1] = 5;
-        SquidCount[2] = 5;
+        SquidCount[1] = 2;
+        SquidCount[2] = 1;
         SquidCount[3] = 5;
 
         for (int i = 0; i < DeathCount.Length; i++)

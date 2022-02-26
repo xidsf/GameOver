@@ -6,28 +6,21 @@ using UnityEngine.SceneManagement;
 
 public class ReturnToPlayScene : MonoBehaviour
 {
-    GameManager gameManager;
-
-    private void Start()
-    {
-        gameManager = FindObjectOfType<GameManager>();
-    }
-
     public void ReturnScene()
     {
-        if(gameManager.currentStage == 1)
+        if(GameManager.instance.currentStage == 1)
         {
             SceneManager.LoadScene("Stage1");
         }
-        else if(gameManager.currentStage == 2)
+        else if(GameManager.instance.currentStage == 2)
         {
             SceneManager.LoadScene("Stage2");
         }
-        else if(gameManager.currentStage == 3)
+        else if(GameManager.instance.currentStage == 3)
         {
             SceneManager.LoadScene("BossStage");
         }
-        else if(gameManager.currentStage == 0)
+        else if(GameManager.instance.currentStage == 0)
         {
             SceneManager.LoadScene("Tutorial");
         }
