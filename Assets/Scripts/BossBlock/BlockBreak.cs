@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BlockBreak : MonoBehaviour
 {
-
     MeshCollider meshCollider;
     MeshRenderer meshRenderer;
     [SerializeField]
@@ -21,18 +20,30 @@ public class BlockBreak : MonoBehaviour
         if(collision.gameObject.CompareTag("Squid"))
         {
             Destroy(collision.gameObject);
-            meshRenderer.enabled = false;
-            meshCollider.enabled = false;
-            for (int i = 0; i < Wood.Length; i++)
+            DestroyCenter();
+        }
+        else if(collision.gameObject.CompareTag("Rock"))
+        {
+            if(collision.gameObject.GetComponent<BossBullet>().isFalling)
             {
-                Wood[i].GetComponent<MeshCollider>().enabled = true;
-                Wood[i].AddComponent<Rigidbody>();
-                Wood[i].GetComponent<Rigidbody>().mass = 2;
+                collision.gameObject.GetComponent<BossBullet>().isFalling = false;
+                DestroyCenter();
             }
-            Invoke("AutoDestroy", 5f);
         }
     }
 
+    private void DestroyCenter()
+    {
+        meshRenderer.enabled = false;
+        meshCollider.enabled = false;
+        for (int i = 0; i < Wood.Length; i++)
+        {
+            Wood[i].GetComponent<MeshCollider>().enabled = true;
+            Wood[i].AddComponent<Rigidbody>();
+            Wood[i].GetComponent<Rigidbody>().mass = 0.2f;
+        }
+        Invoke("AutoDestroy", 1f);
+    }
 
     private void AutoDestroy()
     {

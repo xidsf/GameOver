@@ -179,6 +179,7 @@ public class Boss : MonoBehaviour
         currentBossHP -= _Dmg;
         isGroggy = false;
         isRising = true;
+        currentGroggyTime = GroggyTime;
     }
 
     private void CalcAttackDelay()

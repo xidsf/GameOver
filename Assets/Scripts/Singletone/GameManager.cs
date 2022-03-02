@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
 
     //[HideInInspector]
     public int currentStage;
+    public float playTime;
 
     
     private void Awake()

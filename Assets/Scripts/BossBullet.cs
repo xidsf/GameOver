@@ -13,7 +13,7 @@ public class BossBullet : MonoBehaviour
     [SerializeField]
     private float DestroyTime;
 
-    private bool isFalling = true;
+    public bool isFalling = true;
 
     private void Start()
     {
@@ -49,7 +49,6 @@ public class BossBullet : MonoBehaviour
             playerController.PlayerDamaged();
             StartCoroutine("PlayerKnockDownCoroutine");
         }
-        
     }
 
     IEnumerator PlayerKnockDownCoroutine()

@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -7395869015566103802}
   m_Layer: 0
   m_Name: Rock
-  m_TagString: Untagged
+  m_TagString: Rock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -94,10 +94,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8533c4fc03c0a4c802126b13c6a833, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thePlayer: {fileID: 6896686026581458989, guid: 4f3b2989b2ec6dc46919ecb95502b0dc,
-    type: 3}
   KnockDownTime: 1
   DestroyTime: 10
+  isFalling: 1
 --- !u!54 &-1792328558959963657
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -106,7 +105,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4691387092258483878}
   serializedVersion: 2
-  m_Mass: 0.1
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1

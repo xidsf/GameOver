@@ -17,6 +17,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float invincibleTime;
     private float currentInvincibleTime;
+    private float stuckedTime = 2;
+    private float currentStuckedTime;
 
     [Header("Player Jump & Gravity")]
     [SerializeField]
@@ -93,7 +95,7 @@ public class PlayerController : MonoBehaviour
         applySpeed = walkSpeed;
         maxSquid = GameManager.instance.SquidCount[GameManager.instance.currentStage];
         currentSquid = maxSquid;
-        
+        currentStuckedTime = 0;
     }
 
     void Update()
@@ -107,8 +109,10 @@ public class PlayerController : MonoBehaviour
             TryMove();
             TryJump();
             TryShoot();
+            CalcPlayTime();
         }
         CheckGround();
+        PlayerStuckedCheck();
         CalcShootDelay();
         //ShowVelocity();
         //ObstacleCheck();
@@ -120,10 +124,10 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    private void ShowVelocity()
+    /*private void ShowVelocity()
     {
-        Debug.Log(new Vector3(myRigid.velocity.x, 0, myRigid.velocity.z).magnitude);
-    }
+        Debug.Log(myRigid.velocity.x.ToString() + "/" +myRigid.velocity.z.ToString());
+    }*/
 
     private void CheckGround()
     {
@@ -391,13 +395,13 @@ public class PlayerController : MonoBehaviour
 
     private void CheckQuitMenu()//ESC키 누를 시 화면에 메뉴 출력(게임 일시정지X)
     {
-        if(Input.GetKey(KeyCode.Escape))
+        if(!isSetting &&Input.GetKeyDown(KeyCode.Escape))
         {
             Cursor.visible = true;
             isSetting = true;
             SettingUI.SetActive(true);
         }
-        else if(isSetting && Input.GetKey(KeyCode.Escape))
+        else if(isSetting && Input.GetKeyDown(KeyCode.Escape))
         {
             isSetting = false;
             SettingUI.SetActive(false);
@@ -405,5 +409,27 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void CalcPlayTime()
+    {
+        if(!isSetting && !isDead && GameManager.instance.currentStage != 0)
+        {
+            GameManager.instance.playTime += Time.deltaTime;
+            Debug.Log(GameManager.instance.playTime);
+        }
+    }
+
+    private void PlayerStuckedCheck()
+    {
+        if(myRigid.velocity.y == 0 && !isGround)
+        {
+            currentStuckedTime += Time.deltaTime;
+            if(currentStuckedTime > stuckedTime)
+            {
+                isGround = true;
+                currentStuckedTime = 0;
+            }
+        }
+        
+    }
 
 }
